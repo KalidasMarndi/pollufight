@@ -33,5 +33,6 @@ Run the backend and frontend servers
 ```bash
 # Python Backend
 python src-backend/main.py
+# React Frontend
 npm run dev
 ```
