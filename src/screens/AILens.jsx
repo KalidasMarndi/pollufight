@@ -10,6 +10,7 @@ const AILens = ({ onReportSuccess }) => {
   const navigate = useNavigate();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
+  const streamRef = useRef(null);
 
   const [stream, setStream] = useState(null);
   const [capturedImage, setCapturedImage] = useState(null);
@@ -62,6 +63,8 @@ const AILens = ({ onReportSuccess }) => {
       };
       const newStream = await navigator.mediaDevices.getUserMedia(constraints);
       setStream(newStream);
+      streamRef.current = newStream;
+
       if (videoRef.current) videoRef.current.srcObject = newStream;
     } catch (err) {
       setErrorMsg("Camera access denied or not found.");
@@ -71,7 +74,11 @@ const AILens = ({ onReportSuccess }) => {
 
   useEffect(() => {
     startCamera();
-    return () => stream?.getTracks().forEach(track => track.stop());
+    return () => {
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => track.stop());
+      }
+    }
   }, [startCamera]);
 
   const handleCapture = async () => {
