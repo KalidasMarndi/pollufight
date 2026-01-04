@@ -19,8 +19,13 @@ To keep the main code stable, we use a **Fork & Pull Request** workflow.
 * Describe your changes and submit for review!
 
 # Project Setup
+Clone your fork of the repo
 ```bash
+git clone https://github.com/YOUR-USERNAME/pollufight.git
 cd pollufight
+```
+Install dependencies and run the dev server
+```bash
 npm install
 npm run dev
 ```
