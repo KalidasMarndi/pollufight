@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#0f172a] text-slate-100 overflow-x-hidden selection:bg-emerald-500/30;
+  }
+}
+
+/* Custom Glassmorphism Utility */
+.glass {
+  @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.3)];
+}
+
+.glass-emerald {
+  @apply bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20;
+}
+
+/* Hide scrollbar for cleaner mobile look */
+::-webkit-scrollbar {
+  display: none;
+}
