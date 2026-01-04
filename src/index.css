@@ -1,0 +1,31 @@
+@import "tailwindcss";
+
+@theme {
+  /* Move your custom shadow here to fix the space/comma error */
+  --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+
+  /* You can also define your custom glass colors here */
+  --color-glass-white: rgba(255, 255, 255, 0.05);
+  --color-glass-emerald: rgba(16, 185, 129, 0.1);
+}
+
+@layer base {
+  body {
+    /* Fixed the spacing in the arbitrary hex and selection */
+    @apply bg-[#0f172a] text-slate-100 overflow-x-hidden selection:bg-emerald-500/30;
+  }
+}
+
+/* Custom Glassmorphism Utility */
+.glass {
+  /* Using the theme variable we defined above avoids the parser error */
+  @apply bg-white/5 backdrop-blur-lg border border-white/10 shadow-glass;
+}
+
+.glass-emerald {
+  @apply bg-emerald-500/10 backdrop-blur-md border border-emerald-500/20;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
