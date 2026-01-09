@@ -29,23 +29,16 @@ const AILens = ({ onReportSuccess }) => {
     const uploadResult = await uploadToCloudinary(imageDataUrl);
 
     if (uploadResult.success) {
-      console.log("Background Upload Success:", uploadResult.url);
       setUploadedUrl(uploadResult.url);
 
       // Log location if available
       if (location) {
-        const logResult = await logImageLocation(
+        await logImageLocation(
           { imageUrl: uploadResult.url, imageDataUrl },
           location
         );
-        if (logResult.success) {
-          console.log("Location logged successfully:", logResult.logId);
-        } else {
-          console.warn("Failed to log location:", logResult.error);
-        }
       }
     } else {
-      console.error("Background Upload Error:", uploadResult.error);
       // We don't block the UI yet; we catch the error when they try to Verify
       setErrorMsg("Background upload failed. Please retake.");
     }
@@ -114,11 +107,8 @@ const AILens = ({ onReportSuccess }) => {
       if (locationResult.success) {
         location = locationResult.location;
         setCapturedLocation(location);
-        console.log("Location captured for image:", location);
-      } else {
-        console.warn("Could not capture location:", locationResult.error);
-        // Continue without location - don't block the upload
       }
+      // Continue without location if capture failed - don't block the upload
 
       // Upload image (location will be logged after successful upload)
       handleImageUpload(imageDataUrl, location);
