@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Camera, RotateCcw, UploadCloud, ShieldAlert, Zap, X, AlertCircle, ShieldCheck } from 'lucide-react';
+import { uploadToCloudinary } from '../services/cloudinaryUpload';
+import { getCurrentLocation, logImageLocation } from '../services/locationLogger';
 
 // Added { onReportSuccess } prop from App.jsx
 const AILens = ({ onReportSuccess }) => {
-  const CLOUDINARY_UPLOAD_PRESET = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET;
-  const CLOUDINARY_CLOUD_NAME = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
 
   const navigate = useNavigate();
   const videoRef = useRef(null);
@@ -20,37 +20,37 @@ const AILens = ({ onReportSuccess }) => {
 
   const [uploadedUrl, setUploadedUrl] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [capturedLocation, setCapturedLocation] = useState(null);
 
-  const uploadToCloudinary = async (imageDataUrl) => {
+  const handleImageUpload = async (imageDataUrl, location = null) => {
     setIsUploading(true);
-    try {
-      // Convert data URL to Blob for Cloudinary upload
-      const blobResponse = await fetch(imageDataUrl);
-      const blob = await blobResponse.blob();
 
-      const formData = new FormData();
-      formData.append('file', blob, 'image.jpg');
-      formData.append('upload_preset', CLOUDINARY_UPLOAD_PRESET);
+    // Upload to Cloudinary
+    const uploadResult = await uploadToCloudinary(imageDataUrl);
 
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-        { method: 'POST', body: formData }
-      );
+    if (uploadResult.success) {
+      console.log("Background Upload Success:", uploadResult.url);
+      setUploadedUrl(uploadResult.url);
 
-      const data = await response.json();
-      if (data.secure_url) {
-        console.log("Background Upload Success:", data.secure_url);
-        setUploadedUrl(data.secure_url);
-      } else {
-        throw new Error(data.error?.message || "Upload failed");
+      // Log location if available
+      if (location) {
+        const logResult = await logImageLocation(
+          { imageUrl: uploadResult.url, imageDataUrl },
+          location
+        );
+        if (logResult.success) {
+          console.log("Location logged successfully:", logResult.logId);
+        } else {
+          console.warn("Failed to log location:", logResult.error);
+        }
       }
-    } catch (err) {
-      console.error("Background Upload Error:", err);
+    } else {
+      console.error("Background Upload Error:", uploadResult.error);
       // We don't block the UI yet; we catch the error when they try to Verify
       setErrorMsg("Background upload failed. Please retake.");
-    } finally {
-      setIsUploading(false);
     }
+
+    setIsUploading(false);
   };
 
   const startCamera = useCallback(async () => {
@@ -59,6 +59,7 @@ const AILens = ({ onReportSuccess }) => {
     setUploadedUrl(null);
     setIsUploading(false);
     setShowDetection(false);
+    setCapturedLocation(null);
 
     try {
       const constraints = {
@@ -103,13 +104,31 @@ const AILens = ({ onReportSuccess }) => {
       // Trigger AI Detection box after 800ms for "Scanning" feel
       setTimeout(() => setShowDetection(true), 800);
 
-      uploadToCloudinary(imageDataUrl);
+      // Get location before uploading
+      const locationResult = await getCurrentLocation({
+        timeout: 5000,
+        enableHighAccuracy: true
+      });
+
+      let location = null;
+      if (locationResult.success) {
+        location = locationResult.location;
+        setCapturedLocation(location);
+        console.log("Location captured for image:", location);
+      } else {
+        console.warn("Could not capture location:", locationResult.error);
+        // Continue without location - don't block the upload
+      }
+
+      // Upload image (location will be logged after successful upload)
+      handleImageUpload(imageDataUrl, location);
     }
   };
 
   const handleRetake = () => {
     setCapturedImage(null);
     setShowDetection(false);
+    setCapturedLocation(null);
     startCamera();
   };
 
