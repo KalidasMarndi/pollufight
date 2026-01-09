@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Camera, RotateCcw, UploadCloud, ShieldAlert, Zap, X, AlertCircle, ShieldCheck } from 'lucide-react';
 import { uploadToCloudinary } from '../services/cloudinaryUpload';
 import { getCurrentLocation, logImageLocation } from '../services/locationLogger';
+import { createReport } from '../services/pollutionReports';
 
 // Added { onReportSuccess } prop from App.jsx
 const AILens = ({ onReportSuccess }) => {
@@ -122,9 +123,39 @@ const AILens = ({ onReportSuccess }) => {
     startCamera();
   };
 
+  const createPollutionReport = async (imageUrl) => {
+    if (!capturedLocation) {
+      console.warn('No location available for report creation');
+      return;
+    }
+
+    try {
+      const reportResult = await createReport({
+        location: capturedLocation,
+        imageUrl,
+        metadata: {
+          accuracy: capturedLocation.accuracy,
+          type: 'Industrial', // Default type, can be enhanced later
+          site: null // Can be enhanced with reverse geocoding later
+        }
+      });
+
+      if (reportResult.success) {
+        console.log('Pollution report created successfully:', reportResult.reportId);
+      } else {
+        console.error('Failed to create pollution report:', reportResult.error);
+        // Don't block navigation on report creation failure
+      }
+    } catch (error) {
+      console.error('Error creating pollution report:', error);
+      // Don't block navigation on report creation failure
+    }
+  };
+
   const handleVerify = async () => {
-    // If the upload is already done, proceed immediately
+    // If the upload is already done, create report and proceed
     if (uploadedUrl) {
+      await createPollutionReport(uploadedUrl);
       onReportSuccess(uploadedUrl);
       navigate('/success');
     }
@@ -143,13 +174,14 @@ const AILens = ({ onReportSuccess }) => {
     if (status === 'scanning' && uploadedUrl) {
       // Small delay to let the user see the "Scanning" animation briefly 
       // (optional, simply for better UX feel)
-      const timer = setTimeout(() => {
+      const timer = setTimeout(async () => {
+        await createPollutionReport(uploadedUrl);
         onReportSuccess(uploadedUrl);
         navigate('/success');
       }, 1000);
       return () => clearTimeout(timer);
     }
-  }, [status, uploadedUrl, onReportSuccess, navigate]);
+  }, [status, uploadedUrl, onReportSuccess, navigate, capturedLocation]);
 
   return (
     <div className="relative h-screen bg-black overflow-hidden flex flex-col font-sans">
