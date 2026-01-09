@@ -43,9 +43,13 @@ function App() {
   const [reportCount, setReportCount] = useState(12);
 
   // Function that runs when the user successfully uploads a report
-  const handleReportSuccess = () => {
+  // uploadedUrl: optional Cloudinary URL of the uploaded image
+  const handleReportSuccess = (uploadedUrl) => {
     setPoints(prev => prev + 100);
     setReportCount(prev => prev + 1);
+    if (uploadedUrl) {
+      console.log('Report image uploaded to:', uploadedUrl);
+    }
   };
 
   return (
