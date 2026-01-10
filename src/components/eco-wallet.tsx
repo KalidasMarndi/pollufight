@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from "react"
 import { motion } from "framer-motion"
-import { ArrowUp, Clock, Car, Factory, Banknote, Award } from "lucide-react"
+import { ArrowUp, Clock, Car, Factory, Banknote, Award, Plus, Minus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { doc, onSnapshot, updateDoc, increment, setDoc } from "firebase/firestore"
+import { db } from "@/lib/firebase"
+import { getUserId } from "@/lib/user-id"
 
 const verificationHistory = [
   {
@@ -50,28 +53,50 @@ function AnimatedCheckmark({ delay }: { delay: number }) {
 }
 
 export function EcoWallet() {
-  const totalCredits = 750
   const [displayCredits, setDisplayCredits] = useState(0)
   const [flashingCard, setFlashingCard] = useState<number | null>(null)
+  const [userId, setUserId] = useState<string>("")
 
+  // Fetch/Create User and Subscribe to Credits
   useEffect(() => {
-    const duration = 1500
-    const steps = 30
-    const increment = totalCredits / steps
-    let current = 0
+    const id = getUserId()
+    setUserId(id)
+    const userRef = doc(db, "user_credits", id)
 
-    const timer = setInterval(() => {
-      current += increment
-      if (current >= totalCredits) {
-        setDisplayCredits(totalCredits)
-        clearInterval(timer)
+    const unsubscribe = onSnapshot(userRef, async (docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data()
+        setDisplayCredits(data.credits || 0)
       } else {
-        setDisplayCredits(Math.floor(current))
+        // Create document if it doesn't exist
+        try {
+          await setDoc(userRef, {
+            credits: 150,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          })
+          // The snapshot listener will fire again with the new data
+        } catch (error) {
+          console.error("Error creating user document:", error)
+        }
       }
-    }, duration / steps)
+    })
 
-    return () => clearInterval(timer)
+    return () => unsubscribe()
   }, [])
+
+  const updateCredits = async (amount: number) => {
+    if (!userId) return
+    const userRef = doc(db, "user_credits", userId)
+    try {
+      await updateDoc(userRef, {
+        credits: increment(amount),
+        updatedAt: new Date(),
+      })
+    } catch (error) {
+      console.error("Error updating credits:", error)
+    }
+  }
 
   useEffect(() => {
     setTimeout(() => {
@@ -133,9 +158,8 @@ export function EcoWallet() {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.3 + index * 0.1 }}
-              className={`flex items-center justify-between p-4 rounded-xl border bg-card/30 transition-all ${
-                flashingCard === item.id ? "border-neon-green shadow-[0_0_15px_3px_var(--neon-green)]" : "border-border"
-              }`}
+              className={`flex items-center justify-between p-4 rounded-xl border bg-card/30 transition-all ${flashingCard === item.id ? "border-neon-green shadow-[0_0_15px_3px_var(--neon-green)]" : "border-border"
+                }`}
             >
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-muted">
@@ -161,6 +185,36 @@ export function EcoWallet() {
           <Banknote className="w-4 h-4 mr-2" />
           REDEEM TO BANK ACCOUNT
         </Button>
+      </motion.div>
+
+      {/* Test Controls - For Development Only */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.6 }}
+        className="p-4 rounded-xl border border-dashed border-muted-foreground/30 bg-muted/20"
+      >
+        <p className="font-mono text-[10px] text-muted-foreground mb-3 text-center uppercase tracking-widest">
+          Dev Controls (User ID: {userId.slice(0, 15)}...)
+        </p>
+        <div className="flex gap-2">
+          <Button
+            variant="outline"
+            className="flex-1 font-mono text-xs border-neon-green/50 text-neon-green hover:bg-neon-green/10"
+            onClick={() => updateCredits(100)}
+          >
+            <Plus className="w-3 h-3 mr-2" />
+            Add 100
+          </Button>
+          <Button
+            variant="outline"
+            className="flex-1 font-mono text-xs border-red-500/50 text-red-500 hover:bg-red-500/10"
+            onClick={() => updateCredits(-100)}
+          >
+            <Minus className="w-3 h-3 mr-2" />
+            Remove 100
+          </Button>
+        </div>
       </motion.div>
     </div>
   )
