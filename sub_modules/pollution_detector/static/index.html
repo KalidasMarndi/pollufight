@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoGuard | Intelligent Pollution Detector</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #4ade80;
+            --secondary: #2dd4bf;
+            --accent: #f472b6;
+            --bg-dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(at 0% 0%, hsla(253, 16%, 7%, 1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(225, 39%, 30%, 1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(339, 49%, 30%, 1) 0, transparent 50%);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        /* Glassmorphism Card */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.36);
+            transition: transform 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            line-height: 1.1;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            line-height: 1.6;
+        }
+
+        /* Upload Area */
+        .upload-area {
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 3rem 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover,
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            transition: color 0.3s;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: var(--primary);
+        }
+
+        .file-input {
+            display: none;
+        }
+
+        .preview-container {
+            margin-top: 2rem;
+            border-radius: 16px;
+            overflow: hidden;
+            display: none;
+            position: relative;
+        }
+
+        .preview-image {
+            width: 100%;
+            display: block;
+            border-radius: 16px;
+        }
+
+        .analyze-btn {
+            width: 100%;
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 12px;
+            color: #000;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+            display: none;
+        }
+
+        .analyze-btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        /* Results Section */
+        .result-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .badge {
+            padding: 0.5rem 1rem;
+            background: rgba(244, 114, 182, 0.2);
+            color: var(--accent);
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .score-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: conic-gradient(var(--primary) calc(var(--score) * 1%), rgba(255, 255, 255, 0.1) 0);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: '';
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: var(--bg-dark);
+            /* Should match card bg roughly or be solid */
+            border-radius: 50%;
+        }
+
+        .score-text {
+            position: absolute;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .draft-box {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            white-space: pre-wrap;
+            font-family: 'Inter', monospace;
+            /* Slightly mono feel */
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            border: 1px solid var(--glass-border);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 0.5rem;
+            margin-left: auto;
+            display: block;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-main);
+        }
+
+        /* Loading Spinner */
+        .loader {
+            display: none;
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 900px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Left Panel: Input -->
+        <div class="glass-card">
+            <h1>EcoGuard</h1>
+            <p class="subtitle">AI-Powered Environmental Compliance Assistant. Detect pollution and generate legal
+                notices instantly.</p>
+
+            <div class="upload-area" id="drop-zone" onclick="document.getElementById('file-input').click()">
+                <div class="upload-icon">☁️</div>
+                <h3>Click or Drag Image Here</h3>
+                <p style="color: var(--text-muted); margin-top: 0.5rem; font-size: 0.9rem;">Supports JPG, PNG</p>
+                <input type="file" id="file-input" class="file-input" accept="image/*">
+            </div>
+
+            <div class="preview-container" id="preview-container">
+                <img src="" alt="Preview" class="preview-image" id="preview-image">
+            </div>
+
+            <button class="analyze-btn" id="analyze-btn" onclick="analyzeImage()">Analyze Image</button>
+            <div class="loader" id="loader"></div>
+        </div>
+
+        <!-- Right Panel: Result -->
+        <div class="glass-card result-section" id="result-section">
+            <div class="result-header">
+                <div>
+                    <h3 style="color: var(--text-muted)">Detected Issue</h3>
+                    <h2 id="pollution-type" style="font-size: 2rem; margin-top: 0.5rem;">-</h2>
+                </div>
+                <div class="score-circle" id="score-circle" style="--score: 0">
+                    <span class="score-text" id="confidence-text">0%</span>
+                </div>
+            </div>
+
+            <h4 style="margin-bottom: 1rem;">Legal Notice Draft</h4>
+            <div class="draft-box" id="draft-content">
+                <!-- Draft text will appear here -->
+            </div>
+            <button class="copy-btn" onclick="copyDraft()">📋 Copy Draft</button>
+
+            <h4 style="margin-top: 2rem; margin-bottom: 1rem;">Detected Evidence</h4>
+            <div id="evidence-tags" style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <!-- Tags -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const dropZone = document.getElementById('drop-zone');
+        const fileInput = document.getElementById('file-input');
+        const previewContainer = document.getElementById('preview-container');
+        const previewImage = document.getElementById('preview-image');
+        const analyzeBtn = document.getElementById('analyze-btn');
+        const loader = document.getElementById('loader');
+        const resultSection = document.getElementById('result-section');
+
+        let currentFile = null;
+
+        // Drag and Drop
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length) handleFile(e.target.files[0]);
+        });
+
+        function handleFile(file) {
+            currentFile = file;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                previewImage.src = e.target.result;
+                previewContainer.style.display = 'block';
+                analyzeBtn.style.display = 'block';
+                resultSection.style.display = 'none';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function analyzeImage() {
+            if (!currentFile) return;
+
+            // UI State: Loading
+            analyzeBtn.style.display = 'none';
+            loader.style.display = 'block';
+            resultSection.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('file', currentFile);
+
+            try {
+                const response = await fetch('http://localhost:8000/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Analysis failed');
+
+                const data = await response.json();
+                displayResults(data);
+
+            } catch (error) {
+                alert('Error analyzing image: ' + error.message);
+                analyzeBtn.style.display = 'block';
+            } finally {
+                loader.style.display = 'none';
+            }
+        }
+
+        function displayResults(data) {
+            resultSection.style.display = 'block';
+
+            // Update Text
+            document.getElementById('pollution-type').textContent = data.pollution_type;
+            document.getElementById('draft-content').textContent = data.legal_draft;
+
+            // Update Confidence Circle
+            const percentage = Math.round(data.confidence_level * 100);
+            document.getElementById('confidence-text').textContent = percentage + '%';
+            document.getElementById('score-circle').style.setProperty('--score', percentage);
+
+            // Evidence Tags
+            const tagsContainer = document.getElementById('evidence-tags');
+            tagsContainer.innerHTML = '';
+            data.details.forEach(item => {
+                const span = document.createElement('span');
+                span.className = 'badge';
+                span.textContent = `${item.label} (${Math.round(item.score * 100)}%)`;
+                tagsContainer.appendChild(span);
+            });
+        }
+
+        function copyDraft() {
+            const text = document.getElementById('draft-content').textContent;
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = document.querySelector('.copy-btn');
+                btn.textContent = '✅ Copied!';
+                setTimeout(() => btn.textContent = '📋 Copy Draft', 2000);
+            });
+        }
+    </script>
+
+</body>
+
+</html>

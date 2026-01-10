@@ -1,0 +1,10 @@
+fastapi
+uvicorn
+python-multipart
+pillow
+huggingface_hub
+langchain
+langchain-community
+pydantic
+python-dotenv
+requests
