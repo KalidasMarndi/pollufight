@@ -37,6 +37,9 @@ echo "🚀 Starting Frontend..."
 if [ "$1" == "tauri" ]; then
     echo "📱 Mode: Tauri App"
     pnpm tauri dev
+elif [ "$1" == "android" ]; then
+    echo "🤖 Mode: Android App"
+    pnpm tauri android dev
 else
     echo "🌐 Mode: Browser"
     pnpm dev
