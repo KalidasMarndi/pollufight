@@ -2,7 +2,7 @@
 
 import { Button } from "@/components/ui/button"
 import { Camera, Map } from "lucide-react"
-import type { TacticalTab } from "@/app/page"
+import type { TacticalTab } from "@/App"
 
 interface HeroSectionProps {
   onEnterTactical: (tab?: TacticalTab) => void

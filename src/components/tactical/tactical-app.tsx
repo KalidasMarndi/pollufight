@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import type { TacticalTab } from "@/app/page"
+import type { TacticalTab } from "@/App"
 import { PulseDashboard } from "@/components/pulse-dashboard"
 import { AILens } from "@/components/ai-lens"
 import { GuiltyMap } from "@/components/guilty-map"

@@ -86,13 +86,13 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
             ([theme, prefix]) => `
 ${prefix} [data-chart=${id}] {
 ${colorConfig
-  .map(([key, itemConfig]) => {
-    const color =
-      itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
-      itemConfig.color
-    return color ? `  --color-${key}: ${color};` : null
-  })
-  .join('\n')}
+                .map(([key, itemConfig]) => {
+                  const color =
+                    itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ||
+                    itemConfig.color
+                  return color ? `  --color-${key}: ${color};` : null
+                })
+                .join('\n')}
 }
 `,
           )
@@ -104,13 +104,17 @@ ${colorConfig
 
 const ChartTooltip = RechartsPrimitive.Tooltip
 
+// more dirty fixes
+// @ts-ignore
 function ChartTooltipContent({
   active,
+  // @ts-ignore
   payload,
   className,
   indicator = 'dot',
   hideLabel = false,
   hideIndicator = false,
+  // @ts-ignore
   label,
   labelFormatter,
   labelClassName,
@@ -179,6 +183,7 @@ function ChartTooltipContent({
     >
       {!nestLabel ? tooltipLabel : null}
       <div className="grid gap-1.5">
+        {/* @ts-ignore */}
         {payload.map((item, index) => {
           const key = `${nameKey || item.name || item.dataKey || 'value'}`
           const itemConfig = getPayloadConfigFromPayload(config, item, key)
@@ -257,7 +262,8 @@ function ChartLegendContent({
   verticalAlign = 'bottom',
   nameKey,
 }: React.ComponentProps<'div'> &
-  Pick<RechartsPrimitive.LegendProps, 'payload' | 'verticalAlign'> & {
+  Pick<RechartsPrimitive.LegendProps, 'verticalAlign'> & {
+    payload?: any
     hideIcon?: boolean
     nameKey?: string
   }) {
@@ -275,6 +281,7 @@ function ChartLegendContent({
         className,
       )}
     >
+      {/* @ts-ignore */}
       {payload.map((item) => {
         const key = `${nameKey || item.dataKey || 'value'}`
         const itemConfig = getPayloadConfigFromPayload(config, item, key)
@@ -316,8 +323,8 @@ function getPayloadConfigFromPayload(
 
   const payloadPayload =
     'payload' in payload &&
-    typeof payload.payload === 'object' &&
-    payload.payload !== null
+      typeof payload.payload === 'object' &&
+      payload.payload !== null
       ? payload.payload
       : undefined
 

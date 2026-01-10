@@ -1,7 +1,7 @@
 "use client"
 
 import { Activity, Camera, Map, Wallet } from "lucide-react"
-import type { TacticalTab } from "@/app/page"
+import type { TacticalTab } from "@/App"
 import { cn } from "@/lib/utils"
 
 interface BottomNavProps {

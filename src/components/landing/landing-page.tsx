@@ -1,6 +1,6 @@
 "use client"
 
-import type { TacticalTab } from "@/app/page"
+import type { TacticalTab } from "@/App"
 import { LandingHeader } from "./landing-header"
 import { HeroSection } from "./hero-section"
 import { ImpactStats } from "./impact-stats"

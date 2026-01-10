@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Menu, X, Camera, Map, Wallet, Activity } from "lucide-react"
-import type { TacticalTab } from "@/app/page"
+import type { TacticalTab } from "@/App"
 
 interface LandingHeaderProps {
   onEnterTactical: (tab?: TacticalTab) => void
