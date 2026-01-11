@@ -16,7 +16,9 @@ export interface AnalysisResult {
   error?: string;
 }
 
-const API_URL = 'http://localhost:8000/analyze';
+import { getApiBaseUrl } from '../config/api';
+
+const API_URL = `${getApiBaseUrl(8000)}/analyze`;
 
 export async function analyzeImage(imageUrl: string, originalFilename?: string): Promise<AnalysisResult> {
   try {

@@ -27,7 +27,9 @@ export interface DashboardReport {
   innovation_spotter: Innovation[];
 }
 
-const API_URL = 'http://localhost:8001/analyze';
+import { getApiBaseUrl } from '../config/api';
+
+const API_URL = `${getApiBaseUrl(8001)}/analyze`;
 
 export const DEMO_COMMENTS = [
   "The smoke from the Northside chemical plant is getting unbearable on Tuesday mornings. My kids have started coughing more.",
@@ -54,6 +56,7 @@ export const DEMO_COMMENTS = [
 
 export async function analyzeComments(comments: string[] = DEMO_COMMENTS): Promise<DashboardReport> {
   try {
+    console.log('Sending policy analysis request to:', API_URL);
     const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
@@ -63,7 +66,7 @@ export async function analyzeComments(comments: string[] = DEMO_COMMENTS): Promi
     });
 
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      throw new Error(`HTTP error! status: ${response.status} at ${API_URL}`);
     }
 
     return await response.json();

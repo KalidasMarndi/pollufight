@@ -48,7 +48,7 @@ const techStack = [
     bgColor: "bg-cyan-400/10",
   },
   {
-    name: "Supabase",
+    name: "Firebase",
     icon: Database,
     color: "text-amber-400",
     bgColor: "bg-amber-400/10",

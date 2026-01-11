@@ -12,6 +12,9 @@ export default defineConfig(async () => ({
       "@": "/src",
     },
   },
+  define: {
+    "import.meta.env.VITE_DEV_HOST": JSON.stringify(host),
+  },
 
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   //

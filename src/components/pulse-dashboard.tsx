@@ -29,7 +29,7 @@ export function PulseDashboard() {
       const result = await analyzeComments(DEMO_COMMENTS)
       setReport(result)
     } catch (err) {
-      setError("Failed to connect to the Policy Feedback Engine. Ensure local server is running on port 8001.")
+      setError(`Failed to connect to Policy Engine: ${err instanceof Error ? err.message : String(err)}`)
       console.error(err)
     } finally {
       setLoading(false)

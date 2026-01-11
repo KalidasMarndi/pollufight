@@ -19,7 +19,7 @@ if [ ! -d "venv" ]; then
     echo "⚠️  Virtual environment not found. Creating one..."
     python3 -m venv venv
     source venv/bin/activate
-    pip install -r sub_modules/pollution_detector/requirements.txt
+    pip install -r requirements.txt
 else
     source venv/bin/activate
 fi
