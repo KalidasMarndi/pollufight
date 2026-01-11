@@ -11,8 +11,8 @@ const team = [
     role: "Lead Architect",
     icon: Code2,
     color: "emerald" as const,
-    github: "#",
-    linkedin: "#",
+    github: "https://github.com/ujjwal-dev23",
+    linkedin: "https://www.linkedin.com/in/ujjwal-aa438a358/",
   },
   {
     name: "Aaush",
