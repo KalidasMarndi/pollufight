@@ -15,22 +15,22 @@ interface Message {
 
 const quickActions = [
   { label: "How does Jan-Kavach work?", icon: Sparkles },
-  { label: "What is the Guilty Map?", icon: Map },
+  { label: "What is the Pollution Tracker?", icon: Map },
   { label: "How to report pollution?", icon: Camera },
   { label: "What is EcoWallet?", icon: Wallet },
 ]
 
 const botResponses: Record<string, string> = {
   "how does jan-kavach work?":
-    "Jan-Kavach is a citizen-driven AI platform for pollution accountability. Here's how it works:\n\n1. **Report**: Use AI Lens to photograph pollution violations\n2. **Verify**: Our AI instantly analyzes and verifies the report\n3. **Track**: Monitor enforcement on the Guilty Map\n4. **Earn**: Get EcoCredits for verified reports\n\nWould you like to know more about any specific feature?",
-  "what is the guilty map?":
-    "The **Guilty Map** is our real-time geospatial visualization of pollution violations across your area.\n\n• **Color-coded severity**: Critical (red), High (orange), Medium (yellow), Low (green)\n• **Filter by type**: Industrial, Construction, or All Threats\n• **Crowdsourced verification**: See reports verified by fellow citizens\n• **Track resolution**: Monitor as violations move from 'New' to 'Resolved'\n\nIt helps you understand pollution hotspots in your community.",
+    "Jan-Kavach is a citizen-driven AI platform for pollution accountability. Here's how it works:\n\n1. **Report**: Use AI Lens to photograph pollution violations\n2. **Verify**: Our AI instantly analyzes and verifies the report\n3. **Track**: Monitor enforcement on the Pollution Tracker\n4. **Earn**: Get EcoCredits for verified reports\n\nWould you like to know more about any specific feature?",
+  "what is the pollution tracker?":
+    "The **Pollution Tracker** is our real-time geospatial visualization of pollution violations across your area.\n\n• **Color-coded severity**: Critical (red), High (orange), Medium (yellow), Low (green)\n• **Filter by type**: Industrial, Construction, or All Threats\n• **Crowdsourced verification**: See reports verified by fellow citizens\n• **Track resolution**: Monitor as violations move from 'New' to 'Resolved'\n\nIt helps you understand pollution hotspots in your community.",
   "how to report pollution?":
     "Reporting pollution is simple with **AI Lens**:\n\n1. Tap 'Scan with AI Lens' from the dashboard\n2. Point your camera at the violation\n3. Our AI automatically detects:\n   - Factory emissions\n   - Construction dust\n   - Vehicle smoke\n   - Illegal dumping\n4. Add optional notes and submit\n5. Receive instant verification and EcoCredits\n\nYour report is geo-tagged and time-stamped automatically!",
   "what is ecowallet?":
     "**EcoWallet** is your reward hub for environmental action:\n\n• **Earn EcoCredits**: Get 5-25 credits per verified report\n• **Scout Tiers**: Progress from Rookie to Elite Scout\n• **Verification History**: Track all your contributions\n• **Redeem Rewards**: Convert credits to real benefits\n\nTop scouts unlock special badges and priority verification status!",
   default:
-    "I'm your Jan-Kavach assistant! I can help you understand:\n\n• How to report pollution violations\n• Using the AI Lens scanner\n• Navigating the Guilty Map\n• Earning and using EcoCredits\n• Ward-level monitoring\n\nWhat would you like to know?",
+    "I'm your Jan-Kavach assistant! I can help you understand:\n\n• How to report pollution violations\n• Using the AI Lens scanner\n• Navigating the Pollution Tracker\n• Earning and using EcoCredits\n• Ward-level monitoring\n\nWhat would you like to know?",
 }
 
 export function Chatbot() {

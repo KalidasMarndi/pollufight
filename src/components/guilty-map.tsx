@@ -136,7 +136,7 @@ export function GuiltyMap() {
       {/* Header */}
       <div className="p-4 space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="font-mono text-lg tracking-wider">GUILTY MAP</h2>
+          <h2 className="font-mono text-lg tracking-wider">POLLUTION TRACKER</h2>
           <span className="font-mono text-xs text-neon-red animate-pulse-text">
             {filteredViolations.length} ACTIVE VIOLATIONS
           </span>

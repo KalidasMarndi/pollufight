@@ -12,7 +12,7 @@ interface BottomNavProps {
 const navItems = [
   { id: "pulse" as const, label: "PULSE", icon: Activity },
   { id: "ai-lens" as const, label: "AI LENS", icon: Camera },
-  { id: "guilty-map" as const, label: "GUILTY MAP", icon: Map },
+  { id: "pollution-tracker" as const, label: "POLLUTION TRACKER", icon: Map },
   { id: "wallet" as const, label: "WALLET", icon: Wallet },
 ]
 

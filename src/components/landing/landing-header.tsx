@@ -14,7 +14,7 @@ export function LandingHeader({ onEnterTactical }: LandingHeaderProps) {
 
   const navLinks = [
     { label: "AI Lens", href: "#", icon: Camera, tab: "ai-lens" as TacticalTab },
-    { label: "Guilty Map", href: "#", icon: Map, tab: "guilty-map" as TacticalTab },
+    { label: "Pollution Tracker", href: "#", icon: Map, tab: "pollution-tracker" as TacticalTab },
     { label: "Wallet", href: "#", icon: Wallet, tab: "wallet" as TacticalTab },
     { label: "Pulse", href: "#", icon: Activity, tab: "pulse" as TacticalTab },
   ]

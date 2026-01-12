@@ -100,10 +100,10 @@ export function HeroSection({ onEnterTactical }: HeroSectionProps) {
               size="lg"
               variant="outline"
               className="text-lg px-10 h-14 bg-transparent border-border hover:bg-card gap-2"
-              onClick={() => onEnterTactical("guilty-map")}
+              onClick={() => onEnterTactical("pollution-tracker")}
             >
               <Map className="w-5 h-5" />
-              View Guilty Map
+              View Pollution Tracker
             </Button>
           </div>
         </div>

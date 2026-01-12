@@ -4,7 +4,7 @@ import { TacticalApp } from "@/components/tactical/tactical-app"
 import { SystemTransition } from "@/components/system-transition"
 
 export type AppMode = "portal" | "tactical" | "transitioning"
-export type TacticalTab = "pulse" | "ai-lens" | "guilty-map" | "wallet"
+export type TacticalTab = "pulse" | "ai-lens" | "pollution-tracker" | "wallet"
 
 export default function CivicSenseApp() {
   const [mode, setMode] = useState<AppMode>("portal")

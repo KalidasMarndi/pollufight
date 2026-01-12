@@ -2,7 +2,7 @@ import { Activity } from "lucide-react"
 
 export function LandingFooter() {
   const footerLinks = {
-    Platform: ["AI Lens", "Guilty Map", "EcoWallet", "Pulse Dashboard"],
+    Platform: ["AI Lens", "Pollution Tracker", "EcoWallet", "Pulse Dashboard"],
     Support: ["Help Center", "FAQ", "Contact Us", "About Us", "Feedback"],
     Legal: ["Privacy Policy", "Terms of Service"],
   }

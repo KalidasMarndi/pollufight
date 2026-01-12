@@ -27,7 +27,7 @@ export function TacticalApp({ initialTab, onExit }: TacticalAppProps) {
         <main className="flex-1 overflow-auto pb-20">
           {activeTab === "pulse" && <PulseDashboard />}
           {activeTab === "ai-lens" && <AILens />}
-          {activeTab === "guilty-map" && <GuiltyMap />}
+          {activeTab === "pollution-tracker" && <GuiltyMap />}
           {activeTab === "wallet" && <EcoWallet />}
         </main>
 
