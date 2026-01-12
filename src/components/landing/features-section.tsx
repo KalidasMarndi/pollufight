@@ -17,7 +17,7 @@ const features = [
   },
   {
     icon: Map,
-    title: 'The "Pollution Tracker"',
+    title: 'The "Guilty Map"',
     description: "A live public heatmap highlighting hotspots and identifying key pollution sources.",
   },
   {
